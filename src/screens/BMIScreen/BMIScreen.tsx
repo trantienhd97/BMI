@@ -14,7 +14,7 @@ import MinusIcon from '../../icon/MinusIcon';
  * @type {FC<PropsWithChildren<BMIScreenProps>>}
  */
 
-const initialState = {countWeight: 1, countAge: 1};
+const initialState = {countWeight: 50, countAge: 20};
 
 export interface StateType {
   countWeight?: number;
