@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MaleIcon from '../../icon/MaleIcon';
 import {COLORS} from '../../styles/common-variables';
 import FemaleIcon from '../../icon/FemaleIcon';
@@ -14,7 +14,7 @@ import MinusIcon from '../../icon/MinusIcon';
  * @type {FC<PropsWithChildren<BMIScreenProps>>}
  */
 
-const initialState = {countWeight: 0, countAge: 0};
+const initialState = {countWeight: 1, countAge: 1};
 
 export interface StateType {
   countWeight?: number;
@@ -22,20 +22,30 @@ export interface StateType {
   countAge?: number;
 }
 
+export interface NotiType {
+  noti?: string;
+
+  value?: any;
+
+  comment?: string;
+}
+
 function reducerCount(state: StateType, action: {type: any}) {
   switch (action.type) {
     case 'incrementWeight':
       return {countWeight: state.countWeight + 1, countAge: state.countAge};
     case 'decrementWeight':
-      return state.countWeight > 0
+      return state.countWeight > 1
         ? {countWeight: state.countWeight - 1, countAge: state.countAge}
-        : {countWeight: 0, countAge: state.countAge};
+        : {countWeight: 1, countAge: state.countAge};
     case 'incrementAge':
       return {countAge: state.countAge + 1, countWeight: state.countWeight};
     case 'decrementAge':
-      return state.countAge > 0
+      return state.countAge > 1
         ? {countAge: state.countAge - 1, countWeight: state.countWeight}
-        : {countAge: 0, countWeight: state.countWeight};
+        : {countAge: 1, countWeight: state.countWeight};
+    case 'reset':
+      return {countAge: 1, countWeight: 1};
     default:
       throw new Error();
   }
@@ -46,38 +56,67 @@ function BMIScreen() {
 
   const [male, isMale] = React.useState<boolean>(false);
 
+  const [notification, setNotification] = React.useState<NotiType>({
+    noti: '',
+    value: 0,
+    comment: '',
+  });
+
   const [state, dispatch] = React.useReducer(reducerCount, initialState);
 
+  const handleReCalculate = () => {
+    setNotification({
+      noti: '',
+      value: 0,
+      comment: '',
+    });
+    dispatch({
+      type: 'reset',
+    });
+    setHeight(150);
+  };
+
   const handleCalculate = () => {
-    // @ts-ignore
-    const res = state.countWeight / ((height / 100) * (height / 100));
+    const res =
+      Math.round(
+        // @ts-ignore
+        (state.countWeight / ((height / 100) * (height / 100))) * 100,
+      ) / 100;
 
     if (res < 18.5) {
-      Alert.alert(
-        // @ts-ignore
-        'Chỉ số BMI dưới 18,5 cho thấy bạn đang ở tình trạng nhẹ cân và cần tăng cân thêm. Bạn nên hỏi xin ý kiến bác sĩ để có chế độ ăn uống hợp lý.',
-      );
+      setNotification({
+        noti:
+          'Chỉ số BMI dưới 18,5 cho thấy bạn đang ở tình trạng nhẹ cân và cần tăng cân thêm. Bạn nên hỏi xin ý kiến bác sĩ để có chế độ ăn uống hợp lý.',
+        value: res,
+        comment: 'Gầy',
+      });
     }
 
     if (res >= 18.5 && res <= 24.9) {
-      Alert.alert(
-        // @ts-ignore
-        'Chỉ số BMI ở khoảng này cho thấy bạn có cân nặng phù hợp và khỏe mạnh. Bạn sẽ giảm được nguy cơ mắc các bệnh nguy hiểm nếu duy trì được chỉ số này',
-      );
+      setNotification({
+        noti:
+          'Chỉ số BMI ở khoảng này cho thấy bạn có cân nặng phù hợp và khỏe mạnh. Bạn sẽ giảm được nguy cơ mắc các bệnh nguy hiểm nếu duy trì được chỉ số này',
+        value: res,
+        comment: 'Bình thường',
+      });
     }
 
     if (res >= 25 && res <= 29.9) {
-      Alert.alert(
-        // @ts-ignore
-        'Chỉ số BMI từ 25−29,9 cho thấy bạn đang trong tình trạng thừa cân nhẹ. Bạn nên giảm cân nhưng đừng giảm quá nhiều. Bạn cần hỏi xin lời khuyên của bác sĩ để có chế độ ăn phù hợp.',
-      );
+      setNotification({
+        noti:
+          'Chỉ số BMI từ 25−29,9 cho thấy bạn đang trong tình trạng thừa cân nhẹ. Bạn nên giảm cân nhưng đừng giảm quá nhiều. Bạn cần hỏi xin lời khuyên của bác sĩ để có chế độ ăn phù hợp.',
+        value: res,
+        comment: 'Hơi béo',
+      });
     }
 
     if (res >= 30) {
-      Alert.alert(
-        // @ts-ignore
-        'Chỉ số BMI trên 30 cho thấy bạn đang bị béo phì. Bạn có nguy cơ mắc nhiều bệnh nếu bạn không thực hiện chế độ giảm cân. Bạn cần gặp và nói chuyện với bác sĩ để xin lời khuyên.',
-      );
+      setNotification({
+        noti:
+          'Chỉ số BMI trên 30 cho thấy bạn đang bị béo phì. Bạn có nguy cơ mắc nhiều bệnh nếu bạn không thực hiện chế độ giảm cân. Bạn cần gặp và nói chuyện với bác sĩ để xin lời khuyên.',
+        value: res,
+        comment: 'Béo phì',
+      });
     }
   };
 
@@ -97,10 +136,10 @@ function BMIScreen() {
               style={
                 !male
                   ? styles.itemLeft
-                  : [styles.itemLeft, {backgroundColor: '#343245'}]
+                  : [styles.itemLeft, {backgroundColor: '#20263e'}]
               }>
-              <MaleIcon />
-              <Text style={styles.textItem}>MALE</Text>
+              <MaleIcon color={COLORS.BLUE} />
+              <Text style={[styles.textItem, {marginTop: 20}]}>MALE</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity
@@ -112,7 +151,7 @@ function BMIScreen() {
               style={
                 male
                   ? styles.itemLeft
-                  : [styles.itemLeft, {backgroundColor: '#343245'}]
+                  : [styles.itemLeft, {backgroundColor: '#20263e'}]
               }>
               <FemaleIcon color={COLORS.RED} />
               <View>
@@ -194,6 +233,62 @@ function BMIScreen() {
           <Text style={styles.textBTN}>CALCULATE</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal visible={notification?.value !== 0}>
+        <View style={styles.container}>
+          <View style={[styles.viewHeader, {alignItems: 'flex-start'}]}>
+            <Text style={styles.title}>YOUR RESULT</Text>
+          </View>
+          <View style={{flex: 1, backgroundColor: '#172635'}}>
+            <View
+              style={{
+                flex: 11 / 12,
+                marginTop: 10,
+                padding: 16,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#343245',
+                  flex: 1,
+                  borderRadius: 10,
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingTop: '25%',
+                  paddingBottom: '25%',
+                  paddingLeft: 30,
+                  paddingRight: 30,
+                }}>
+                <Text
+                  style={{color: 'green', fontSize: 22, fontWeight: 'bold'}}>
+                  {notification?.comment}
+                </Text>
+                <Text
+                  style={{color: 'white', fontSize: 50, fontWeight: 'bold'}}>
+                  {notification?.value}
+                </Text>
+
+                <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 20,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    {notification?.noti}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.viewBTN}
+              onPress={handleReCalculate}>
+              <Text style={styles.textBTN}>RE-CALCULATE</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -243,7 +338,7 @@ const styles = StyleSheet.create({
   itemLeft: {
     borderRadius: 10,
     width: '100%',
-    backgroundColor: '#20263e',
+    backgroundColor: '#343245',
     padding: 50,
     alignItems: 'center',
     justifyContent: 'center',
@@ -258,7 +353,7 @@ const styles = StyleSheet.create({
   },
   itemRight: {
     padding: 50,
-    backgroundColor: '#20263e',
+    backgroundColor: '#343245',
     borderRadius: 10,
     width: '100%',
     alignItems: 'center',
