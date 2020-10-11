@@ -1,11 +1,19 @@
 import React from 'react';
-import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import MaleIcon from '../../icon/MaleIcon';
 import {COLORS} from '../../styles/common-variables';
 import FemaleIcon from '../../icon/FemaleIcon';
-import Slider from '@react-native-community/slider';
-import PlusIcon from '../../icon/PlusIcon';
-import MinusIcon from '../../icon/MinusIcon';
+import SexComponent from './SexComponent/SexComponent';
+import HeightComponent from './HeightComponent/HeightComponent';
+import CountComponent from './CountComponent/CountComponent';
+import ReCaculateComponent from './ReCaculateComponent/ReCaculateComponent';
 
 /**
  * File: BMIScreen.tsx
@@ -45,11 +53,13 @@ function reducerCount(state: StateType, action: {type: any}) {
         ? {countAge: state.countAge - 1, countWeight: state.countWeight}
         : {countAge: 1, countWeight: state.countWeight};
     case 'reset':
-      return {countAge: 1, countWeight: 1};
+      return initialState;
     default:
       throw new Error();
   }
 }
+
+const heightScreen = Dimensions.get('window').height;
 
 function BMIScreen() {
   const [height, setHeight] = React.useState<number>(150);
@@ -120,6 +130,22 @@ function BMIScreen() {
     }
   };
 
+  const handleDecreWeight = () => {
+    dispatch({type: 'decrementWeight'});
+  };
+
+  const handleDecreAge = () => {
+    dispatch({type: 'decrementAge'});
+  };
+
+  const handleincrementWeight = () => {
+    dispatch({type: 'incrementWeight'});
+  };
+
+  const handleincrementAge = () => {
+    dispatch({type: 'incrementAge'});
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.viewHeader}>
@@ -127,106 +153,41 @@ function BMIScreen() {
       </View>
       <View style={styles.viewContent}>
         <View style={styles.viewItem}>
-          <TouchableOpacity
-            style={styles.viewItemLeft}
-            onPress={() => {
+          <SexComponent
+            icon={<MaleIcon color={COLORS.BLUE} />}
+            text={'MALE'}
+            handleSelectSex={() => {
               isMale(true);
-            }}>
-            <View
-              style={
-                !male
-                  ? styles.itemLeft
-                  : [styles.itemLeft, {backgroundColor: '#20263e'}]
-              }>
-              <MaleIcon color={COLORS.BLUE} />
-              <Text style={[styles.textItem, {marginTop: 20}]}>MALE</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.viewItemRight}
-            onPress={() => {
-              isMale(false);
-            }}>
-            <View
-              style={
-                male
-                  ? styles.itemLeft
-                  : [styles.itemLeft, {backgroundColor: '#20263e'}]
-              }>
-              <FemaleIcon color={COLORS.RED} />
-              <View>
-                <Text style={[styles.textItem, {marginTop: 20}]}>FEMALE</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        </View>
+            }}
+            selected={!male}
+          />
 
-        <View style={styles.viewHeight}>
-          <Text style={styles.textItem}>HIGHT</Text>
-          <Text style={[styles.textItem, {marginTop: 10, fontWeight: 'bold'}]}>
-            <Text style={[styles.textItem, {fontSize: 30}]}>{height}</Text> cm
-          </Text>
-          <Slider
-            style={{width: 200, height: 40, marginTop: 10}}
-            minimumValue={0}
-            maximumValue={250}
-            minimumTrackTintColor="#5a3c52"
-            maximumTrackTintColor="#000000"
-            value={height}
-            onValueChange={setHeight}
-            step={1}
+          <SexComponent
+            icon={<FemaleIcon color={COLORS.RED} />}
+            text={'FEMALE'}
+            handleSelectSex={() => {
+              isMale(false);
+            }}
+            selected={male}
           />
         </View>
 
+        <HeightComponent text={'HEIGHT'} state={height} setSate={setHeight} />
+
         <View style={styles.viewCount}>
-          <View style={styles.viewItemLeft}>
-            <View style={styles.itemLeftCount}>
-              <Text style={styles.textItem}>WEIGHT</Text>
-              <Text
-                style={[
-                  styles.textItem,
-                  {marginTop: 10, fontSize: 30, fontWeight: 'bold'},
-                ]}>
-                {state.countWeight}
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                  style={styles.viewIcon}
-                  onPress={() => dispatch({type: 'decrementWeight'})}>
-                  <MinusIcon color={COLORS.WHITE} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.viewIcon}
-                  onPress={() => dispatch({type: 'incrementWeight'})}>
-                  <PlusIcon color={COLORS.WHITE} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View style={styles.viewItemRight}>
-            <View style={styles.itemRightCount}>
-              <Text style={styles.textItem}>AGE</Text>
-              <Text
-                style={[
-                  styles.textItem,
-                  {marginTop: 10, fontSize: 30, fontWeight: 'bold'},
-                ]}>
-                {state.countAge}
-              </Text>
-              <View style={{flexDirection: 'row'}}>
-                <TouchableOpacity
-                  style={styles.viewIcon}
-                  onPress={() => dispatch({type: 'decrementAge'})}>
-                  <MinusIcon color={COLORS.WHITE} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.viewIcon}
-                  onPress={() => dispatch({type: 'incrementAge'})}>
-                  <PlusIcon color={COLORS.WHITE} />
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
+          <CountComponent
+            decrement={handleDecreWeight}
+            text={'WEIGHT'}
+            state={state.countWeight}
+            increment={handleincrementWeight}
+          />
+
+          <CountComponent
+            decrement={handleDecreAge}
+            text={'AGE'}
+            state={state.countAge}
+            increment={handleincrementAge}
+          />
         </View>
 
         <TouchableOpacity style={styles.viewBTN} onPress={handleCalculate}>
@@ -235,59 +196,11 @@ function BMIScreen() {
       </View>
 
       <Modal visible={notification?.value !== 0}>
-        <View style={styles.container}>
-          <View style={[styles.viewHeader, {alignItems: 'flex-start'}]}>
-            <Text style={styles.title}>YOUR RESULT</Text>
-          </View>
-          <View style={{flex: 1, backgroundColor: '#172635'}}>
-            <View
-              style={{
-                flex: 11 / 12,
-                marginTop: 10,
-                padding: 16,
-              }}>
-              <View
-                style={{
-                  backgroundColor: '#343245',
-                  flex: 1,
-                  borderRadius: 10,
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingTop: '25%',
-                  paddingBottom: '25%',
-                  paddingLeft: 30,
-                  paddingRight: 30,
-                }}>
-                <Text
-                  style={{color: 'green', fontSize: 22, fontWeight: 'bold'}}>
-                  {notification?.comment}
-                </Text>
-                <Text
-                  style={{color: 'white', fontSize: 50, fontWeight: 'bold'}}>
-                  {notification?.value}
-                </Text>
-
-                <View style={{alignItems: 'center', justifyContent: 'center'}}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 20,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    {notification?.noti}
-                  </Text>
-                </View>
-              </View>
-            </View>
-
-            <TouchableOpacity
-              style={styles.viewBTN}
-              onPress={handleReCalculate}>
-              <Text style={styles.textBTN}>RE-CALCULATE</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <ReCaculateComponent
+          title={'YOUR RESULT'}
+          notification={notification}
+          handleReCalculate={handleReCalculate}
+        />
       </Modal>
     </View>
   );
@@ -301,7 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#181e33',
   },
   viewHeader: {
-    height: 120,
+    height: '10%',
     backgroundColor: '#172635',
     justifyContent: 'flex-end',
     alignItems: 'center',
@@ -322,6 +235,8 @@ const styles = StyleSheet.create({
   viewItem: {
     flexDirection: 'row',
     flex: 3 / 12,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   viewItemLeft: {
     paddingRight: 16,
@@ -329,66 +244,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  viewItemRight: {
-    paddingLeft: 16,
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemLeft: {
-    borderRadius: 10,
-    width: '100%',
-    backgroundColor: '#343245',
-    padding: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemLeftCount: {
-    borderRadius: 10,
-    width: '100%',
-    backgroundColor: '#343245',
-    padding: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemRight: {
-    padding: 50,
-    backgroundColor: '#343245',
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemRightCount: {
-    padding: 50,
-    backgroundColor: '#343245',
-    borderRadius: 10,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  image: {
-    height: 150,
-    width: '100%',
-    resizeMode: 'contain',
-  },
   textItem: {
     color: '#bec3c6',
     fontSize: 18,
     marginRight: 5,
   },
-  viewHeight: {
-    flex: 3 / 12,
-    backgroundColor: '#343245',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   viewCount: {
     flexDirection: 'row',
     flex: 3 / 12,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   viewBTN: {
+    padding: 10,
+    marginTop: 20,
     backgroundColor: '#ff0061',
     flex: 1 / 12,
     marginBottom: 20,
@@ -401,10 +270,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
-  viewIcon: {
-    padding: 7,
-    backgroundColor: '#575c69',
-    borderRadius: 30,
-    margin: 10,
+  viewContenModalChild: {
+    backgroundColor: '#343245',
+    flex: 1,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: '25%',
+    paddingBottom: '25%',
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  viewContentModal: {
+    flex: 11 / 12,
+    marginTop: 10,
+    padding: 16,
+  },
+  textNotification: {
+    color: 'white',
+    fontSize: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

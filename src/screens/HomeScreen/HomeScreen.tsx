@@ -64,7 +64,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollView: {
+    flex: 1,
     paddingTop: 16,
+    backgroundColor: '#f8efd4',
   },
   viewHeader: {
     height: 120,
@@ -72,6 +74,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     padding: 16,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
   },
   title: {
     color: 'white',
