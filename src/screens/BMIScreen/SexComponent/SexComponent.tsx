@@ -21,7 +21,13 @@ export interface SexComponentProps {
 function SexComponent(props: SexComponentProps) {
   const {icon, text, handleSelectSex, selected} = props;
   return (
-    <TouchableOpacity style={selected ? [styles.container , {backgroundColor: '#20263e'}] : styles.container} onPress={handleSelectSex}>
+    <TouchableOpacity
+      style={
+        selected
+          ? [styles.container, {backgroundColor: '#343245'}]
+          : styles.container
+      }
+      onPress={handleSelectSex}>
       {icon}
       <Text style={styles.textItem} numberOfLines={1}>
         {text}
@@ -36,7 +42,7 @@ const styles = StyleSheet.create({
   container: {
     width: '48%',
     height: '100%',
-    backgroundColor: '#343245',
+    backgroundColor: '#20263e',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
