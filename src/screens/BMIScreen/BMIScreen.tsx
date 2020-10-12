@@ -66,6 +66,8 @@ function BMIScreen() {
 
   const [male, isMale] = React.useState<boolean>(false);
 
+  const [timer, setTimer] = React.useState<any>(null);
+
   const [notification, setNotification] = React.useState<NotiType>({
     noti: '',
     value: 0,
@@ -132,18 +134,27 @@ function BMIScreen() {
 
   const handleDecreWeight = () => {
     dispatch({type: 'decrementWeight'});
-  };
-
-  const handleDecreAge = () => {
-    dispatch({type: 'decrementAge'});
-  };
-
-  const handleincrementWeight = () => {
-    dispatch({type: 'incrementWeight'});
+    setTimer(setTimeout(handleDecreWeight, 200));
   };
 
   const handleincrementAge = () => {
     dispatch({type: 'incrementAge'});
+    setTimer(setTimeout(handleincrementAge, 200));
+  };
+
+  const clearTimer = () => {
+    clearTimeout(timer);
+    setTimer(null);
+  };
+
+  const handleDecreAge = () => {
+    dispatch({type: 'decrementAge'});
+    setTimer(setTimeout(handleDecreAge, 200));
+  };
+
+  const handleincrementWeight = () => {
+    dispatch({type: 'incrementWeight'});
+    setTimer(setTimeout(handleincrementWeight, 200));
   };
 
   return (
@@ -176,6 +187,7 @@ function BMIScreen() {
 
         <View style={styles.viewCount}>
           <CountComponent
+            clearTimer={clearTimer}
             decrement={handleDecreWeight}
             text={'WEIGHT'}
             state={state.countWeight}
@@ -187,6 +199,7 @@ function BMIScreen() {
             text={'AGE'}
             state={state.countAge}
             increment={handleincrementAge}
+            clearTimer={clearTimer}
           />
         </View>
 
