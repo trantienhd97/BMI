@@ -15,6 +15,7 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 import {appService} from './services/app-service';
 import {NavigationContainer} from '@react-navigation/native';
 import BMIScreen from './screens/BMIScreen/BMIScreen';
+import RockPaperScissors from "./screens/RockPaperScissors/RockPaperScissors";
 
 declare const global: {HermesInternal: null | {}};
 
@@ -34,6 +35,11 @@ function App() {
         <Screen
           name={navigationScreens.bmi}
           component={BMIScreen}
+          initialParams={{}}
+        />
+        <Screen
+          name={navigationScreens.rockPaperScissor}
+          component={RockPaperScissors}
           initialParams={{}}
         />
       </Navigator>

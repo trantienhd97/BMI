@@ -15,6 +15,7 @@ export interface NavigationScreenMapper {
 export const navigationScreens = {
   app: translate('screens.app'),
   bmi: translate('screens.bmi'),
+  rockPaperScissor: translate('screens.rockPaperScissor'),
 };
 
 /**

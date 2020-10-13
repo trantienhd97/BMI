@@ -10,6 +10,7 @@ import {
 
 import {NavigationProps} from '../../core/NavigationProps';
 import {navigationScreens} from '../../config/navigation';
+import RockPaperScissors from "../RockPaperScissors/RockPaperScissors";
 
 /**
  * File: HomeScreen.tsx
@@ -30,6 +31,11 @@ function HomeScreen(props: HomeScreenProps) {
     // @ts-ignore
     props.navigation.navigate(navigationScreens.bmi);
   };
+
+  const handleGoToRockPaperScissors = () => {
+    // @ts-ignore
+    props.navigation.navigate(navigationScreens.rockPaperScissor);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.viewHeader}>
@@ -48,9 +54,17 @@ function HomeScreen(props: HomeScreenProps) {
               style={styles.image}
             />
           </TouchableOpacity>
-          <View style={styles.viewItemRight}>
-            <View style={styles.item} />
-          </View>
+          <TouchableOpacity
+            style={styles.viewItemLeft}
+            onPress={handleGoToRockPaperScissors}>
+            <Image
+              source={{
+                uri:
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRh2Uu1xIQDAtETia31kps1OOONzOwdDG5avw&usqp=CAU',
+              }}
+              style={styles.image}
+            />
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
