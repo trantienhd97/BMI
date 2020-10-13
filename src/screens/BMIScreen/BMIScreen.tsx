@@ -137,9 +137,17 @@ function BMIScreen() {
     setTimer(setTimeout(handleDecreWeight, 200));
   };
 
+  const handleOnPressDecreWeight = () => {
+    dispatch({type: 'decrementWeight'});
+  };
+
   const handleincrementAge = () => {
     dispatch({type: 'incrementAge'});
     setTimer(setTimeout(handleincrementAge, 200));
+  };
+
+  const handleOnPressIncrementAge = () => {
+    dispatch({type: 'incrementAge'});
   };
 
   const clearTimer = () => {
@@ -152,9 +160,17 @@ function BMIScreen() {
     setTimer(setTimeout(handleDecreAge, 200));
   };
 
+  const handleOnPressDecreAge = () => {
+    dispatch({type: 'decrementAge'});
+  };
+
   const handleincrementWeight = () => {
     dispatch({type: 'incrementWeight'});
     setTimer(setTimeout(handleincrementWeight, 200));
+  };
+
+  const handleOnpressIncrementWeight = () => {
+    dispatch({type: 'incrementWeight'});
   };
 
   return (
@@ -187,19 +203,23 @@ function BMIScreen() {
 
         <View style={styles.viewCount}>
           <CountComponent
+            onPressDecrement={handleOnPressDecreWeight}
             clearTimer={clearTimer}
             decrement={handleDecreWeight}
             text={'WEIGHT'}
             state={state.countWeight}
             increment={handleincrementWeight}
+            onPressIncrement={handleOnpressIncrementWeight}
           />
 
           <CountComponent
+            onPressDecrement={handleOnPressDecreAge}
             decrement={handleDecreAge}
             text={'AGE'}
             state={state.countAge}
             increment={handleincrementAge}
             clearTimer={clearTimer}
+            onPressIncrement={handleOnPressIncrementAge}
           />
         </View>
 
@@ -227,7 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#181e33',
   },
   viewHeader: {
-    height: '10%',
+    height: '15%',
     backgroundColor: '#172635',
     justifyContent: 'flex-end',
     alignItems: 'center',

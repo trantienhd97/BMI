@@ -20,10 +20,22 @@ export interface CountComponentProps {
   increment?(): void;
 
   clearTimer?(): void;
+
+  onPressDecrement?(): void;
+
+  onPressIncrement?(): void;
 }
 
 function CountComponent(props: CountComponentProps) {
-  const {text, state, decrement, increment, clearTimer} = props;
+  const {
+    text,
+    state,
+    decrement,
+    increment,
+    clearTimer,
+    onPressDecrement,
+    onPressIncrement,
+  } = props;
 
   return (
     <View style={styles.container}>
@@ -41,10 +53,12 @@ function CountComponent(props: CountComponentProps) {
         <TouchableOpacity
           style={styles.viewIcon}
           onLongPress={decrement}
-          onPressOut={clearTimer}>
+          onPressOut={clearTimer}
+          onPress={onPressDecrement}>
           <MinusIcon color={COLORS.WHITE} />
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={onPressIncrement}
           style={styles.viewIcon}
           onLongPress={increment}
           onPressOut={clearTimer}>
