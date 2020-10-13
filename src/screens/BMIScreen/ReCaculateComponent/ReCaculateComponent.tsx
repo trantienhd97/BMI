@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#181e33',
   },
   viewHeader: {
-    height: '10%',
+    height: '15%',
     backgroundColor: '#172635',
     justifyContent: 'flex-end',
     alignItems: 'center',
