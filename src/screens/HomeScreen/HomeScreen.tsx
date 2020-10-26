@@ -10,7 +10,6 @@ import {
 
 import {NavigationProps} from '../../core/NavigationProps';
 import {navigationScreens} from '../../config/navigation';
-import RockPaperScissors from "../RockPaperScissors/RockPaperScissors";
 
 /**
  * File: HomeScreen.tsx
@@ -35,6 +34,11 @@ function HomeScreen(props: HomeScreenProps) {
   const handleGoToRockPaperScissors = () => {
     // @ts-ignore
     props.navigation.navigate(navigationScreens.rockPaperScissor);
+  };
+
+  const handleGotoReadPaper = () => {
+    // @ts-ignore
+    props.navigation.navigate(navigationScreens.readPaper);
   };
   return (
     <View style={styles.container}>
@@ -62,6 +66,16 @@ function HomeScreen(props: HomeScreenProps) {
                 uri:
                   'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRh2Uu1xIQDAtETia31kps1OOONzOwdDG5avw&usqp=CAU',
               }}
+              style={styles.image}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.viewItem]}>
+          <TouchableOpacity
+            style={[styles.viewItemLeft]}
+            onPress={handleGotoReadPaper}>
+            <Image
+              source={require('../../icon/read-paper.png')}
               style={styles.image}
             />
           </TouchableOpacity>

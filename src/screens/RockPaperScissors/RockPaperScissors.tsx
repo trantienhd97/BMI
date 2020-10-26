@@ -232,6 +232,6 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#19d3da',
+    // backgroundColor: '#19d3da',
   },
 });

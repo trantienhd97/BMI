@@ -1,4 +1,3 @@
-import {translate} from '@react3l/react3l/helpers/i18n';
 import {RefObject} from 'react';
 import {NavigationContainerRef} from '@react-navigation/native';
 import React from 'reactn';
@@ -13,9 +12,12 @@ export interface NavigationScreenMapper {
  * @types {NavigationScreenMapper}
  */
 export const navigationScreens = {
-  app: translate('screens.app'),
-  bmi: translate('screens.bmi'),
-  rockPaperScissor: translate('screens.rockPaperScissor'),
+  app: 'home',
+  bmi: 'bmi',
+  rockPaperScissor: 'rockPaperScissor',
+  readPaper: 'readPaper',
+  homeNewspaper: 'homeNewspaper',
+  detailNews: 'detailNews',
 };
 
 /**

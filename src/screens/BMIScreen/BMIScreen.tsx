@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Dimensions,
-  Modal,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import MaleIcon from '../../icon/MaleIcon';
 import {COLORS} from '../../styles/common-variables';
 import FemaleIcon from '../../icon/FemaleIcon';
@@ -41,16 +34,22 @@ export interface NotiType {
 function reducerCount(state: StateType, action: {type: any}) {
   switch (action.type) {
     case 'incrementWeight':
+      // @ts-ignore
       return {countWeight: state.countWeight + 1, countAge: state.countAge};
     case 'decrementWeight':
+      // @ts-ignore
       return state.countWeight > 1
-        ? {countWeight: state.countWeight - 1, countAge: state.countAge}
+        ? // @ts-ignore
+          {countWeight: state.countWeight - 1, countAge: state.countAge}
         : {countWeight: 1, countAge: state.countAge};
     case 'incrementAge':
+      // @ts-ignore
       return {countAge: state.countAge + 1, countWeight: state.countWeight};
     case 'decrementAge':
+      // @ts-ignore
       return state.countAge > 1
-        ? {countAge: state.countAge - 1, countWeight: state.countWeight}
+        ? // @ts-ignore
+          {countAge: state.countAge - 1, countWeight: state.countWeight}
         : {countAge: 1, countWeight: state.countWeight};
     case 'reset':
       return initialState;
@@ -59,7 +58,7 @@ function reducerCount(state: StateType, action: {type: any}) {
   }
 }
 
-const heightScreen = Dimensions.get('window').height;
+// const heightScreen = Dimensions.get('window').height;
 
 function BMIScreen() {
   const [height, setHeight] = React.useState<number>(150);

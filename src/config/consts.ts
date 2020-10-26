@@ -13,6 +13,9 @@ if (!API_BASE_URL) {
   throw new Error('Missing API_BASE_URL');
 }
 
+export const GET_DATA_FROM_US =
+  'http://newsapi.org/v2/top-headlines?country=us&apiKey=f4d2babf5ed64a1abe4c9f4542d3d99b';
+
 // ------------------------------------------------------------------------
 
 /**
