@@ -2,11 +2,13 @@ import React, {PropsWithChildren} from 'react';
 import {
   Dimensions,
   Image,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
 } from 'react-native';
 import {navigationScreens} from '../../../../config/navigation';
+import {formatRelative, subDays} from 'date-fns';
 
 /**
  * File: ItemComponent.tsx
@@ -23,16 +25,24 @@ function ItemComponent(props: PropsWithChildren<ItemComponentProps>) {
       item,
     });
   }, [item, navigation]);
+
+  const handleGoToWeb = React.useCallback(async () => {
+    await Linking.openURL(item?.url);
+  }, [item]);
   return (
     <TouchableOpacity onPress={handleGoToDetailScreen} style={styles.viewItem}>
       <Image
         source={{uri: item?.urlToImage}}
         style={{width: widthScreen - 32, height: 150, borderRadius: 10}}
       />
-      <Text style={styles.time}>{item?.publishedAt}</Text>
-      <Text style={styles.title} numberOfLines={2}>
-        {item.content}
+      <Text style={styles.time}>
+        {formatRelative(subDays(new Date(), 3), new Date())}
       </Text>
+      <TouchableOpacity onPress={handleGoToWeb}>
+        <Text style={styles.title} numberOfLines={2}>
+          {item.content}
+        </Text>
+      </TouchableOpacity>
     </TouchableOpacity>
   );
 }

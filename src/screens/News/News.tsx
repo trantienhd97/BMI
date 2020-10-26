@@ -31,6 +31,8 @@ function News(props: PropsWithChildren<NewsProps>) {
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
+  const [end, isEnd] = React.useState<boolean>(false);
+
   const [refresh, setRefesh] = React.useState<boolean>(false);
 
   const [pageNumber, setPageNumber] = React.useState<number>(1);
@@ -47,6 +49,8 @@ function News(props: PropsWithChildren<NewsProps>) {
   }, []);
 
   const handleRefresh = React.useCallback(() => {
+    setDataFromUS([]);
+    isEnd(false);
     setRefesh(true);
     setPageNumber(1);
     handleGetNewsFromUS()
@@ -55,20 +59,23 @@ function News(props: PropsWithChildren<NewsProps>) {
   }, [handleGetNewsFromUS]);
 
   const handleLoadMore = React.useCallback(async () => {
-    let currentPage = pageNumber;
-    const response = await fetch(
-      'http://newsapi.org/v2/top-headlines?country=us&page=' +
-        (currentPage + 1).toString() +
-        '&pageSize=10&apiKey=bd59ee98a2e746c5aa247039f71918c9',
-    );
-    const jsonData = await response.json();
-    if (jsonData.articles.length !== 0) {
-      setDataFromUS(dataFromUS.concat(jsonData.articles));
-    } else {
-      Alert.alert('Hết tin');
+    if (!end) {
+      let currentPage = pageNumber;
+      const response = await fetch(
+        'http://newsapi.org/v2/top-headlines?country=us&page=' +
+          (currentPage + 1).toString() +
+          '&pageSize=10&apiKey=bd59ee98a2e746c5aa247039f71918c9',
+      );
+      const jsonData = await response.json();
+      if (jsonData.articles.length !== 0) {
+        setDataFromUS(dataFromUS.concat(jsonData.articles));
+        setPageNumber(currentPage + 1);
+      } else {
+        isEnd(true);
+        Alert.alert('Hết tin');
+      }
     }
-    setPageNumber(currentPage + 1);
-  }, [dataFromUS, pageNumber]);
+  }, [dataFromUS, end, pageNumber]);
 
   React.useEffect(() => {
     setLoading(true);
@@ -126,6 +133,9 @@ function News(props: PropsWithChildren<NewsProps>) {
               <View style={styles.noNews}>
                 <Text style={styles.textNoNews}>Không có tin</Text>
               </View>
+            }
+            ListFooterComponent={
+              end ? <Text>Hết tin</Text> : <Text>Loading...</Text>
             }
           />
         </View>
